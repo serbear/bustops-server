@@ -7,31 +7,23 @@ const cors = require('cors');
 const allStopAreasRoute = require('./routes/allStopAreas');
 const stopAreasByNameRoute = require('./routes/stopAreasByName');
 const areaStopsByAreaNameRoute = require('./routes/areaStopByAreaName');
+const busesForStopOfRegionRoute = require('./routes/bussesForStopOfRegion');
 
 const app = express();
 
 // Enable CORS for all routes
 app.use(cors());
 
-
-
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 app.use(cookieParser());
 
-// app.use((req, res, next) => {
-//     res.append('Access-Control-Allow-Origin', ['*']);
-//     res.append('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
-//     res.append('Access-Control-Allow-Headers', 'Content-Type');
-//     res.append("Content-Type", "application/json");
-//     res.append("Access-Control-Allow-Credentials-Type", 'true');
-//     next();
-// });
-
+// Connect routes.
 app.use('/allStopAreas', allStopAreasRoute);
 app.use('/stopAreasByName', stopAreasByNameRoute);
 app.use('/areaStopsByAreaName', areaStopsByAreaNameRoute);
+app.use('/busesForStopOfRegion', busesForStopOfRegionRoute);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
@@ -48,9 +40,5 @@ app.use(function (err, req, res, next) {
     res.status(err.status || 500);
     res.render('error');
 });
-
-
-
-
 
 module.exports = app;
