@@ -1,9 +1,10 @@
-const express = require('express');
-const {getAreaStopsByName} = require("../data");const router = express.Router();
+const express = require("express");
+const { GetAreaStopsByName } = require("../data");
+const router = express.Router();
 
-router.post('/', async function (req, res, next) {
-    const userResponse = await getAreaStopsByName(req.body.name);
-    res.send(userResponse);
+router.post("/", async function (req, res) {
+  const userResponse = await GetAreaStopsByName(req.body.name);
+  res.send(userResponse);
 });
 
 module.exports = router;

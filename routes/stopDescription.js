@@ -1,9 +1,10 @@
 const express = require("express");
-const { GetAreaStopsByAreaName } = require("../data");
+const { GetStopDescription } = require("../data");
 const router = express.Router();
 
 router.post("/", async function (req, res) {
-  const userResponse = await GetAreaStopsByAreaName(req.body.name);
+  // noinspection JSUnresolvedReference
+  const userResponse = await GetStopDescription(req.body.stop_name);
   res.send(userResponse);
 });
 

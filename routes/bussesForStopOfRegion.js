@@ -3,10 +3,8 @@ const { GetBusesForStopInArea } = require("../data");
 const router = express.Router();
 
 router.post("/", async function (req, res) {
-  const userResponse = await GetBusesForStopInArea(
-    req.body.region_name,
-    req.body.stop_name,
-  );
+  // noinspection JSUnresolvedReference
+  const userResponse = await GetBusesForStopInArea(req.body.stop_id);
   res.send(userResponse);
 });
 

@@ -37,28 +37,63 @@ async function CallStoredProcedure(name, params) {
   return rows[0];
 }
 
-async function getAllAreaStops() {
+async function GetAllAreaStops() {
   return await CallStoredProcedure("GetAllStopAreas", null);
 }
 
-async function getAreaStopByName(areaStopName) {
+async function GetAreaStopByName(areaStopName) {
   return await CallStoredProcedure("GetStopAreaByNameLike", [areaStopName]);
 }
 
-async function getAreaStopsByAreaName(areaStopName) {
+async function GetAreaStopsByAreaName(areaStopName) {
   return await CallStoredProcedure("GetStopsOfArea", [areaStopName]);
 }
 
-async function GetBusesForStopInArea(regionName, stopName) {
-  return await CallStoredProcedure("GetBusesForStopInArea", [
-    stopName,
-    regionName,
+async function GetBusesForStopInArea(stop_id) {
+  let fullCollection = await CallStoredProcedure("GetBusesForStopInArea", [
+    stop_id,
   ]);
+
+  /*
+  Rebuilding the collection.
+  Arrival time is collected in an array.
+  */
+
+  let distinctCollection = [];
+
+  for (const xKey in fullCollection) {
+    const currentBus = fullCollection[xKey];
+    // noinspection JSUnresolvedReference
+    const filteredBus = distinctCollection.filter(
+      (record) => record.route_id === currentBus.route_id,
+    );
+
+    if (filteredBus.length === 0) {
+      // add a new buss in the distinct collection.
+      const newBus = currentBus;
+      newBus.arrival_time = [currentBus.arrival_time];
+      distinctCollection.push(newBus);
+    } else {
+      // add a new arrival time to an existing bus
+      // noinspection JSUnresolvedReference
+      distinctCollection
+        // Search the bus in the distinct collection.
+        .filter((record) => record.route_id === filteredBus[0].route_id)[0]
+        .arrival_time.push(currentBus.arrival_time);
+    }
+  }
+
+  return distinctCollection;
+}
+
+async function GetStopDescription(stopName) {
+  return await CallStoredProcedure("GetStopDescription", [stopName]);
 }
 
 module.exports = {
-  getAreaStops: getAllAreaStops,
-  getAreaStopsByName: getAreaStopByName,
-  getAreaStopsByAreaName: getAreaStopsByAreaName,
+  GetAreaStops: GetAllAreaStops,
+  GetAreaStopsByName: GetAreaStopByName,
+  GetAreaStopsByAreaName: GetAreaStopsByAreaName,
   GetBusesForStopInArea: GetBusesForStopInArea,
+  GetStopDescription: GetStopDescription,
 };
