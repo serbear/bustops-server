@@ -10,6 +10,7 @@ const stopAreasByNameRoute = require("./routes/stopAreasByName");
 const areaStopsByAreaNameRoute = require("./routes/areaStopByAreaName");
 const busesForStopOfRegionRoute = require("./routes/bussesForStopOfRegion");
 const stopDescriptionRoute = require("./routes/stopDescription");
+const nearestRegionAndStopRoute = require("./routes/nearestRegionAndStop");
 
 const app = express();
 
@@ -27,6 +28,7 @@ app.use("/stopAreasByName", stopAreasByNameRoute);
 app.use("/areaStopsByAreaName", areaStopsByAreaNameRoute);
 app.use("/busesForStopOfRegion", busesForStopOfRegionRoute);
 app.use("/stopDescription", stopDescriptionRoute);
+app.use("/nearestRegionAndStop", nearestRegionAndStopRoute);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
@@ -36,6 +38,7 @@ app.use(function (req, res, next) {
 // error handler
 app.use(function (err, req, res) {
   // set locals, only providing error in development
+  // noinspection JSUnresolvedReference
   res.locals.message = err.message;
   // noinspection JSUnresolvedReference
   res.locals.error = req.app.get("env") === "development" ? err : {};

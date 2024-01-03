@@ -48,7 +48,9 @@ async function GetAreaStopByName(areaStopName) {
 async function GetAreaStopsByAreaName(areaStopName) {
   return await CallStoredProcedure("GetStopsOfArea", [areaStopName]);
 }
-
+async function GetNearestRegionAndStop(lat, lon) {
+  return await CallStoredProcedure("NearestRegionAndStop", [lat, lon]);
+}
 async function GetBusesForStopInArea(stop_id) {
   let fullCollection = await CallStoredProcedure("GetBusesForStopInArea", [
     stop_id,
@@ -96,4 +98,5 @@ module.exports = {
   GetAreaStopsByAreaName: GetAreaStopsByAreaName,
   GetBusesForStopInArea: GetBusesForStopInArea,
   GetStopDescription: GetStopDescription,
+  GetNearestRegionAndStop: GetNearestRegionAndStop,
 };
