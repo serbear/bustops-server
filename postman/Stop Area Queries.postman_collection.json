@@ -194,7 +194,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"stop_id\": 150464\n}",
+					"raw": "{\n    \"stop_id\": 27898\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -236,6 +236,33 @@
 					"port": "3000",
 					"path": [
 						"stopDescription"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get a region and a nearest stop",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"latitude\": 59.3887232,\n    \"longitude\": 27.7807104\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/nearestRegionAndStop",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"nearestRegionAndStop"
 					]
 				}
 			},
