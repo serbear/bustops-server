@@ -2,12 +2,15 @@ const mariadb = require("mariadb");
 const { db } = require("./config");
 const { GetStoredProcedureParamString } = require("./libs");
 
+const { MARIADB_USERNAME, MARIADB_PASSWORD, MARIADB_PORT, MARIADB_DB } =
+  process.env;
+
 const pool = mariadb.createPool({
   host: db.host,
-  user: db.user,
-  password: db.password,
-  port: db.port,
-  database: db.database,
+  user: MARIADB_USERNAME,
+  password: MARIADB_PASSWORD,
+  port: MARIADB_PORT,
+  database: MARIADB_DB,
   connectionLimit: 5,
   connectTimeout: db.connectTimeout,
   multipleStatements: true,

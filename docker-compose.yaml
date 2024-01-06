@@ -1,0 +1,9 @@
+version: '3.1'
+services:
+  nodejs:
+    image: bustops-server
+    container_name: bustops-server
+    restart: on-failure
+    ports:
+      - "3000:3000"
+    env_file: .env
