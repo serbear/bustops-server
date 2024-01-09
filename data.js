@@ -91,8 +91,8 @@ async function GetBusesForStopInArea(stop_id) {
   return distinctCollection;
 }
 
-async function GetStopDescription(stopName) {
-  return await CallStoredProcedure("GetStopDescription", [stopName]);
+async function GetStopDescription(stopName, areaName) {
+  return await CallStoredProcedure("GetStopDescription", [stopName, areaName]);
 }
 
 module.exports = {
