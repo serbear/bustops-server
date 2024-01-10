@@ -59,7 +59,32 @@
 				},
 				"description": "The tests in this request validate that:\n\n- the response code is 200\n- the response is a JSON object\n- the response has an 'arg' object\n- the response has 'headers' object\n- the response has a 'URL' property"
 			},
-			"response": []
+			"response": [
+				{
+					"name": "Remote host",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "84.50.49.183:3000/allStopAreas",
+							"host": [
+								"84",
+								"50",
+								"49",
+								"183"
+							],
+							"port": "3000",
+							"path": [
+								"allStopAreas"
+							]
+						}
+					},
+					"_postman_previewlanguage": null,
+					"header": null,
+					"cookie": [],
+					"body": null
+				}
+			]
 		},
 		{
 			"name": "All stop areas by name",
@@ -194,7 +219,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"stop_id\": 27898\n}",
+					"raw": "{\n    \"stop_id\": 156120\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -221,7 +246,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"stop_name\": \"Aa\"\n}",
+					"raw": "{\n    \"stop_name\": \"Gümnaasium\",\n    \"stop_area\": \"Abja-Paluoja linn\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"

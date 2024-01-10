@@ -1,10 +1,13 @@
 const mariadb = require("mariadb");
 const { db } = require("./config");
-const { GetStoredProcedureParamString } = require("./libs");
-
+const {
+  GetStoredProcedureParamString,
+  CheckTime,
+  SetNearestBusFlag,
+  GetRouteFromCollection,
+} = require("./libs");
 const { MARIADB_USERNAME, MARIADB_PASSWORD, MARIADB_PORT, MARIADB_DB } =
   process.env;
-
 const pool = mariadb.createPool({
   host: db.host,
   user: MARIADB_USERNAME,
@@ -15,6 +18,9 @@ const pool = mariadb.createPool({
   connectTimeout: db.connectTimeout,
   multipleStatements: true,
 });
+
+let shortestTime = null;
+let nearestTimeBusId = null;
 
 async function CallStoredProcedure(name, params) {
   let rows;
@@ -69,24 +75,33 @@ async function GetBusesForStopInArea(stop_id) {
   for (const xKey in fullCollection) {
     const currentBus = fullCollection[xKey];
     // noinspection JSUnresolvedReference
-    const filteredBus = distinctCollection.filter(
-      (record) => record.route_id === currentBus.route_id,
+    const filteredBus = GetRouteFromCollection(
+      currentBus.route_id,
+      distinctCollection,
     );
 
-    if (filteredBus.length === 0) {
+    if (filteredBus === undefined) {
       // add a new buss in the distinct collection.
+
       const newBus = currentBus;
       newBus.arrival_time = [currentBus.arrival_time];
       distinctCollection.push(newBus);
     } else {
       // add a new arrival time to an existing bus
-      // noinspection JSUnresolvedReference
-      distinctCollection
-        // Search the bus in the distinct collection.
-        .filter((record) => record.route_id === filteredBus[0].route_id)[0]
-        .arrival_time.push(currentBus.arrival_time);
+
+      let b = GetRouteFromCollection(filteredBus.route_id, distinctCollection);
+      b.arrival_time.push(currentBus.arrival_time);
+
+      // Update nearest time.
+      let nearestTime = CheckTime(shortestTime, currentBus.arrival_time);
+      if (nearestTime !== null) {
+        nearestTimeBusId = filteredBus.route_id;
+        shortestTime = nearestTime;
+      }
     }
   }
+
+  SetNearestBusFlag(nearestTimeBusId, distinctCollection);
 
   return distinctCollection;
 }
