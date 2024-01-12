@@ -16,17 +16,38 @@ function CheckTime(currentNearestTime, busTime) {
 
 function SetNearestBusFlag(busId, busCollection) {
   for (const bus in busCollection) {
+    // noinspection JSUnresolvedReference
     busCollection[bus].isEarlier = busCollection[bus].route_id === busId;
   }
 }
 
 function GetRouteFromCollection(busId, busCollection) {
+  // noinspection JSUnresolvedReference
   return busCollection.filter((record) => record.route_id === busId)[0];
+}
+
+function UpdateNearestTime(shortestTime, bus) {
+  const nearestTime = Array.isArray(bus.arrival_time)
+    ? CheckTime(shortestTime, bus.arrival_time[0])
+    : CheckTime(shortestTime, bus.arrival_time);
+
+  const returnObj = {};
+
+  if (nearestTime !== null) {
+    // noinspection JSUnresolvedReference
+    returnObj.nearestTimeBusId = bus.route_id;
+    returnObj.shortestTime = nearestTime;
+  } else {
+    returnObj.nearestTimeBusId = null;
+    returnObj.shortestTime = shortestTime;
+  }
+
+  return returnObj;
 }
 
 module.exports = {
   GetStoredProcedureParamString: GetStoredProcedureParamString,
-  CheckTime: CheckTime,
   SetNearestBusFlag: SetNearestBusFlag,
   GetRouteFromCollection: GetRouteFromCollection,
+  UpdateNearestTime: UpdateNearestTime,
 };

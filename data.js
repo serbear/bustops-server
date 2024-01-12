@@ -2,9 +2,9 @@ const mariadb = require("mariadb");
 const { db } = require("./config");
 const {
   GetStoredProcedureParamString,
-  CheckTime,
   SetNearestBusFlag,
   GetRouteFromCollection,
+  UpdateNearestTime,
 } = require("./libs");
 const { MARIADB_USERNAME, MARIADB_PASSWORD, MARIADB_PORT, MARIADB_DB } =
   process.env;
@@ -80,25 +80,33 @@ async function GetBusesForStopInArea(stop_id) {
       distinctCollection,
     );
 
+    let timeCounter = 0;
+    let x = null;
+
     if (filteredBus === undefined) {
       // add a new buss in the distinct collection.
 
       const newBus = currentBus;
       newBus.arrival_time = [currentBus.arrival_time];
       distinctCollection.push(newBus);
+
+      x = UpdateNearestTime(shortestTime, newBus);
     } else {
       // add a new arrival time to an existing bus
 
+      // Show only 5 time values per bus.
+      if (timeCounter === 5) continue;
+
+      // noinspection JSUnresolvedReference
       let b = GetRouteFromCollection(filteredBus.route_id, distinctCollection);
       b.arrival_time.push(currentBus.arrival_time);
 
-      // Update nearest time.
-      let nearestTime = CheckTime(shortestTime, currentBus.arrival_time);
-      if (nearestTime !== null) {
-        nearestTimeBusId = filteredBus.route_id;
-        shortestTime = nearestTime;
-      }
+      x = UpdateNearestTime(shortestTime, currentBus);
     }
+
+    nearestTimeBusId =
+      x.nearestTimeBusId === null ? nearestTimeBusId : x.nearestTimeBusId;
+    shortestTime = x.shortestTime;
   }
 
   SetNearestBusFlag(nearestTimeBusId, distinctCollection);
