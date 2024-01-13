@@ -79,8 +79,6 @@ async function GetBusesForStopInArea(stop_id) {
       currentBus.route_id,
       distinctCollection,
     );
-
-    let timeCounter = 0;
     let x = null;
 
     if (filteredBus === undefined) {
@@ -94,14 +92,15 @@ async function GetBusesForStopInArea(stop_id) {
     } else {
       // add a new arrival time to an existing bus
 
-      // Show only 5 time values per bus.
-      if (timeCounter === 5) continue;
-
       // noinspection JSUnresolvedReference
       let b = GetRouteFromCollection(filteredBus.route_id, distinctCollection);
-      b.arrival_time.push(currentBus.arrival_time);
 
-      x = UpdateNearestTime(shortestTime, currentBus);
+      if (b.arrival_time.length < 5) {
+        b.arrival_time.push(currentBus.arrival_time);
+        x = UpdateNearestTime(shortestTime, currentBus);
+      } else {
+        continue;
+      }
     }
 
     nearestTimeBusId =
